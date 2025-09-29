@@ -10,7 +10,7 @@
             //Then also that there are 5 different books you can borrow. And How many of evry book there is.
             string[] names = {"Elsa", "Amanda", "Simon", "Per", "Bengt" };
             int[] password = { 1234, 9999, 1111, 5050, 6969 };
-            string[] books = { "Harry potter", "Where the Crawdads Sing", "It", "It Ends With us", "Lord of the Flies" };
+            string[] books = { "Harry potter and the Goblet of Fire", "Where the Crawdads Sing", "It", "It Ends With us", "Lord of the Flies" };
             int[] amountBooks = { 3, 11, 6, 4, 8 };
             
             //A jaggedArray to keep track of which book every user has borrowed
@@ -31,10 +31,11 @@
             //A loop so the user can try to log in with pin-code and username
             while (attempts > 0)
             {
-                Console.WriteLine("");
+
                 //Console.WriteLine("");
                 //Console.WriteLine("Vänligen skriv in användarnamn för att logga in.");
                 string username = Console.ReadLine();
+
 
                 Console.WriteLine("Skriv in din PIN-Kod.");
                 bool validPin = int.TryParse(Console.ReadLine(), out int userPassword);
@@ -61,17 +62,22 @@
                     Console.WriteLine($"Välkommen {username}");
                     break;
                 }
-                else
+                //To lower the attempts when failed login
+                attempts--;
+
+                //to write when you have attempts left 
+                if (attempts > 0)
                 {
+                    Console.WriteLine("");
                     Console.WriteLine("Fel användarnamn eller lösenord. Försök igen.");
                     Console.WriteLine("Skriv in användarnamn.");
-                    attempts--;
                 }
             }
 
             //what happens if you fail 3 times to log in
             if (userLogin == -1)
             {
+                Console.WriteLine("");
                 Console.WriteLine("För många felaktiga svar, starta om programmet för att fösöka att logga in!");
                 return;
             }
@@ -91,9 +97,13 @@
 
             switch (menuChoice)
             {
+                //Code to check how many books are left to borrow.
                 case "1":
-                    Console.WriteLine($"{books[0]}, {books[1]}, {books[2]}, {books[3]}, {books[4]}");
-
+                    Console.WriteLine("Tillgängliga böcker att låna:");
+                    for (int i = 0; i < books.Length; i++)
+                    {
+                        Console.WriteLine($"{i+1}. {books[i]} - {amountBooks[i]} finns kvar.");
+                    }
                     Console.WriteLine("Klicka på Enter för att gå tillbaka till menyn");
                     Console.ReadLine();
                     goto menu;
