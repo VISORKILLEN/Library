@@ -7,29 +7,45 @@
         //Here i have a start point for when the user wants to log out.
         start:
             //Here i have som diffrenet datatypes with arrays, so  that the user can login with username and pin-code.
-            //Then also that there are 5 different books you can borrow.
+            //Then also that there are 5 different books you can borrow. And How many of evry book there is.
             string[] names = {"Elsa", "Amanda", "Simon", "Per", "Bengt" };
             int[] password = { 1234, 9999, 1111, 5050, 6969 };
             string[] books = { "Harry potter", "Where the Crawdads Sing", "It", "It Ends With us", "Lord of the Flies" };
+            int[] amountBooks = { 3, 11, 6, 4, 8 };
+            
+            //A jaggedArray to keep track of which book every user has borrowed
+            int[][] booksLoaned = new int[names.Length][];
+            for(int i = 0; i < booksLoaned.Length; i++)
+            {
+                booksLoaned[i] = new int[books.Length];
+            }
+
+            //For how many log in attempts and to se what user is logged in
             int attempts = 3;
             int userLogin = -1;
 
-            //Here is i have a while loop so the user can try to log in with pin-code and username
+            Console.Clear();
+            Console.WriteLine("Välkommen till bibloteket hemsida.");
+            Console.WriteLine("");
+            Console.WriteLine("Vänligen skriv in användarnamn för att börja logga in.");
+            //A loop so the user can try to log in with pin-code and username
             while (attempts > 0)
             {
-                Console.WriteLine("Skriv in användarnamn.");
+                Console.WriteLine("");
+                //Console.WriteLine("");
+                //Console.WriteLine("Vänligen skriv in användarnamn för att logga in.");
                 string username = Console.ReadLine();
 
                 Console.WriteLine("Skriv in din PIN-Kod.");
                 bool validPin = int.TryParse(Console.ReadLine(), out int userPassword);
-                //Here is what happens if you have the right username but wrong pin-code
+
+                //To see if PIN-code is correct
                 if (!validPin)
                 {
-                    Console.WriteLine("Fel PIN-Kod. Vänligen försök igen.");
                     attempts--;
                     continue;
                 }
-                //These lines of code is so that if the username and pinkod match it makes the user log in oke ans makes the next if  statement.
+                //To see if the username and pinkod match it makes the user login.
                 for (int i = 0; i < names.Length; i++)
                 {
                     if (names[i] == username && password[i] == userPassword)
@@ -38,8 +54,8 @@
                         break;
                     }
                 }
-                //If the user puts in the right username and PIN-code it says a WriteLine , if it has the wrong username a different WriteLine happens.
-                //Also if íts the right username and PIN-code it breaks and goes to out of the loop and gets to the menu.
+
+                //If the user logs in or fail to do so
                 if (userLogin != -1)
                 {
                     Console.WriteLine($"Välkommen {username}");
@@ -47,21 +63,22 @@
                 }
                 else
                 {
-                    Console.WriteLine("Fel användarnamn. Försök igen.");
+                    Console.WriteLine("Fel användarnamn eller lösenord. Försök igen.");
+                    Console.WriteLine("Skriv in användarnamn.");
                     attempts--;
                 }
             }
-            //If you puts in wrong login 3 times the program says restart to try to log in again.
 
+            //what happens if you fail 3 times to log in
             if (userLogin == -1)
             {
                 Console.WriteLine("För många felaktiga svar, starta om programmet för att fösöka att logga in!");
                 return;
             }
 
-        //Here I have some Console.WriteLines and so the user knows what options there are.
-        //Also a "menu: so that there is a point where the user can go back too, so the can pick another choice in the menu
+            // A menu start point and the whole meny. And to make it look better
         menu:
+            Console.Clear();
             Console.WriteLine("Välj vad du vill göra!");
             Console.WriteLine("1. Visa böcker");
             Console.WriteLine("2. Låna bok");
@@ -100,7 +117,15 @@
                     goto menu;
 
                 case "5":
+
+                    Console.WriteLine("Du har loggat ut!");
+                    Console.ReadLine();
                     goto start;
+
+                default:
+                    Console.WriteLine("Ogiltligt val. Vänligen försök igen.");
+                    Console.WriteLine("");
+                    goto menu;
                  
             }
         }
