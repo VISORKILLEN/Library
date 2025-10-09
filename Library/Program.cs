@@ -20,161 +20,215 @@
                 booksLoaned[i] = new int[books.Length];
             }
 
-            //For how many log in attempts and to se what user is logged in
-            int attempts = 3;
-            int userLogin = -1;
+            //Code so that you can login in again
+            bool running = true;
 
-        //Here i have a start point for when the user wants to log out.
-        start:
-            Console.Clear();
-            Console.WriteLine("Välkommen till bibloteket hemsida.");
-            Console.WriteLine("");
-            Console.WriteLine("Vänligen skriv in användarnamn för att börja logga in.");
-            //A loop so the user can try to log in with pin-code and username
-            while (attempts > 0)
+            while (running)
             {
-                //Console.WriteLine("");
-                //Console.WriteLine("Vänligen skriv in användarnamn för att logga in.");
-                string username = Console.ReadLine();
-                Console.WriteLine("Skriv in din PIN-Kod.");
-                bool validPin = int.TryParse(Console.ReadLine(), out int userPassword);
+                //For how many log in attempts and to se what user is logged in
+                int attempts = 3;
+                int userLogin = -1;
 
-                //To see if PIN-code is correct
-                if (!validPin)
+                //Here i have a start point for when the user wants to log out.
+
+                Console.Clear();
+                Console.WriteLine("Välkommen till bibloteket hemsida.");
+                Console.WriteLine("");
+                Console.WriteLine("Vänligen skriv in användarnamn för att börja logga in.");
+
+                //A loop so the user can try to log in with pin-code and username
+                while (attempts > 0)
                 {
-                    attempts--;
-                    continue;
-                }
-                //To see if the username and pinkod match it makes the user login.
-                for (int i = 0; i < names.Length; i++)
-                {
-                    if (names[i] == username && password[i] == userPassword)
+                    //Console.WriteLine("");
+                    //Console.WriteLine("Vänligen skriv in användarnamn för att logga in.");
+                    string username = Console.ReadLine();
+                    Console.WriteLine("Skriv in din PIN-Kod.");
+                    bool validPin = int.TryParse(Console.ReadLine(), out int userPassword);
+
+                    //To see if PIN-code is correct
+                    if (!validPin)
                     {
-                        userLogin = i;
+                        attempts--;
+                        continue;
+                    }
+                    //To see if the username and pinkod match it makes the user login.
+                    for (int i = 0; i < names.Length; i++)
+                    {
+                        if (names[i] == username && password[i] == userPassword)
+                        {
+                            userLogin = i;
+                            break;
+                        }
+                    }
+
+                    //If the user logs in or fail to do so
+                    if (userLogin != -1)
+                    {
+                        Console.WriteLine($"Välkommen {username}");
                         break;
                     }
+
+                    //To lower the attempts when failed login
+                    attempts--;
+
+                    //to write when you have attempts left 
+                    if (attempts > 0)
+                    {
+                        Console.WriteLine("\nFel användarnamn eller lösenord. Försök igen.");
+                        Console.WriteLine("Skriv in användarnamn.");
+                    }
                 }
 
-                //If the user logs in or fail to do so
-                if (userLogin != -1)
+                //what happens if you fail 3 times to log in
+                if (userLogin == -1)
                 {
-                    Console.WriteLine($"Välkommen {username}");
-                    break;
+                    Console.WriteLine("\nFör många felaktiga svar, starta om programmet för att fösöka att logga in!");
+                    return;
                 }
-                //To lower the attempts when failed login
-                attempts--;
 
-                //to write when you have attempts left 
-                if (attempts > 0)
+                //menu loop to have a starting point when logged in
+                bool loggedIn = true;
+                while (loggedIn)
                 {
+                    Console.Clear();
+                    Console.WriteLine("Välj vad du vill göra!");
+                    Console.WriteLine("1. Visa böcker");
+                    Console.WriteLine("2. Låna bok");
+                    Console.WriteLine("3. Lämna tillbaka bok");
+                    Console.WriteLine("4. Mina lån");
+                    Console.WriteLine("5. Logga ut");
+                    string menuChoice = Console.ReadLine();
                     Console.WriteLine("");
-                    Console.WriteLine("Fel användarnamn eller lösenord. Försök igen.");
-                    Console.WriteLine("Skriv in användarnamn.");
+
+                    //Made cases for every menu choice
+                    switch (menuChoice)
+                    {
+                        case "1":
+
+                            //takes the "availableBooks and applies here
+                            Console.WriteLine("Tillgängliga böcker att låna:");
+                            availableBooks();
+
+                            //Tells the user to press "Enter to go back to menu.
+                            Console.WriteLine("Klicka på Enter för att gå tillbaka till menyn");
+                            Console.ReadLine();
+                            break;
+
+                        case "2":
+
+                            //Takes the "availableBooks and see what books are available
+                            Console.WriteLine("Vilken bok skulle du vilja låna? Skriv numret:");
+                            availableBooks();
+
+                            //tries to see what number input the user puts in
+                            bool validToLoan = int.TryParse(Console.ReadLine(), out int loanChoices);
+
+                            //Checks if the input is valid in the books array
+                            if (validToLoan && loanChoices >= 1 && loanChoices <= books.Length)
+                            {
+                                int index = loanChoices - 1;
+
+                                //Checks so that there is som books left to borrow
+                                if (amountBooks[index] > 0)
+                                {
+                                    //Lowers the amount of available books, and increase books borrowed for the user
+                                    amountBooks[index]--;
+                                    booksLoaned[userLogin][index]++;
+                                    Console.WriteLine($"Du har lånat {books[index]}.");
+                                }
+
+                                //if there aren't any books left
+                                else
+                                {
+                                    Console.WriteLine("Den boken är tyvärr helt slut.");
+                                }
+                            }
+
+                            Console.WriteLine("Klicka på Enter för att gå tillbaka till menyn");
+                            Console.ReadLine();
+                            break;
+
+                        case "3":
+                            Console.WriteLine("Vilken bok skulle du vilja lämna tillbaka? Skriv en siffra");
+
+                            //A loop to see what books are borrowed by that user.
+                            for (int i = 0; i < books.Length; i++)
+                            {
+                                if (booksLoaned[userLogin][i] > 0)
+                                {
+                                    Console.WriteLine($"{i + 1}. {books[i]} - Du har lånat {booksLoaned[userLogin][i]} exemplar");
+                                }
+                            }
+
+                            //Read the user input on which book the want to return
+                            bool validReturns = int.TryParse(Console.ReadLine(), out int returnChoices);
+
+                            //Checks if the input is a valid number in range
+                            if (validReturns && returnChoices >= 1 && returnChoices <= books.Length)
+                            {
+                                int index = returnChoices - 1;
+
+                                //Checks if the user have any copies to return
+                                if (booksLoaned[userLogin][index] > 0)
+                                {
+                                    //Increases available copies to borrow, lowers the borrowed copies of the user.
+                                    amountBooks[index]++;
+                                    booksLoaned[userLogin][index]--;
+                                    Console.WriteLine($"Du har lämnat tillbaka {books[index]}.");
+                                }
+
+                                //Error message
+                                else
+                                {
+                                    Console.WriteLine("Tyvärr felaktig inlämmning");
+                                }
+                            }
+                            Console.WriteLine("Klicka på Enter för att gå tillbaka till menyn");
+                            Console.ReadLine();
+                            break;
+
+                        case "4":
+
+                            bool hasLoaned = false;
+
+                            //Loop to se what books the user has borrowed
+                            for (int i = 0; i < books.Length; i++)
+                            {
+                                if (booksLoaned[userLogin][i] > 0)
+                                {
+                                    Console.WriteLine($"Dina lånade böcker är {books[i]} - {booksLoaned[userLogin][i]} exemplar.");
+                                    hasLoaned = true;
+                                }
+                            }
+
+                            //Error code if the user hasen't loaned anything
+                            if (!hasLoaned)
+                            {
+                                Console.WriteLine("Du lånar ingen bok just nu.");
+                            }
+                            Console.WriteLine("\nKlicka på Enter för att gå tillbaka till menyn");
+                            Console.ReadLine();
+                            break;
+
+                        case "5":
+
+                            //Goes back to start and logs out user
+                            Console.WriteLine("Du har loggat ut!");
+                            Console.ReadLine();
+                            loggedIn = false;
+                            break;
+
+                        //If the choose anything outside of the menu choices
+                        default:
+                            Console.WriteLine("Ogiltligt val. Vänligen försök igen.");
+                            Console.WriteLine("");
+                            break;
+
+                    }
                 }
-            }
-
-            //what happens if you fail 3 times to log in
-            if (userLogin == -1)
-            {
-                Console.WriteLine("");
-                Console.WriteLine("För många felaktiga svar, starta om programmet för att fösöka att logga in!");
-                return;
-            }
-
-        // A menu start point and the whole meny. And to make it look better
-        menu:
-            Console.Clear();
-            Console.WriteLine("Välj vad du vill göra!");
-            Console.WriteLine("1. Visa böcker");
-            Console.WriteLine("2. Låna bok");
-            Console.WriteLine("3. Lämna tillbaka bok");
-            Console.WriteLine("4. Mina lån");
-            Console.WriteLine("5. Logga ut");
-            string menuChoice = Console.ReadLine();
-            Console.WriteLine("");
-
-            switch (menuChoice)
-            {
-                //Code to check how many books are left to borrow.
-                case "1":
-                    Console.WriteLine("Tillgängliga böcker att låna:");
-                    availableBooks();
-                    Console.WriteLine("Klicka på Enter för att gå tillbaka till menyn");
-                    Console.ReadLine();
-                    goto menu;
-
-                case "2":
-                    Console.WriteLine("Vilken bok skulle du vilja låna? Skriv numret:");
-                    availableBooks();
-
-                    bool validToLoan = int.TryParse(Console.ReadLine(), out int loanChoices);
-                    if (validToLoan && loanChoices >= 1 && loanChoices <= books.Length)
-                    {
-                        int index = loanChoices - 1;
-                        if (amountBooks[index] > 0)
-                        {
-                            amountBooks[index]--;
-                            booksLoaned[userLogin][index]++;
-                            Console.WriteLine($"Du har lånat {books[index]}.");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Den boken är tyvärr helt slut.");
-                        }
-                    }
-
-                    Console.WriteLine("Klicka på Enter för att gå tillbaka till menyn");
-                    Console.ReadLine();
-                    goto menu;
-
-                case "3":
-                    Console.WriteLine("Vilken bok skulle du vilja lämna tillbaka? Skriv en siffra");
-                    for (int i = 0; i < books.Length; i++)
-                    {
-                        if (booksLoaned[userLogin][i] > 0)
-                        {
-                            Console.WriteLine($"{i + 1}. {books[i]} - Du har lånat {booksLoaned[userLogin][i]} exemplar");
-                        }
-                    }
-
-                    bool validReturns = int.TryParse(Console.ReadLine(), out int returnChoices);
-
-                    if (validReturns && returnChoices >= 1 && returnChoices <= books.Length)
-                    {
-                        int index = returnChoices - 1;
-                        if (booksLoaned[userLogin][index] > 0)
-                        {
-                            amountBooks[index]++;
-                            booksLoaned[userLogin][index]--;
-                            Console.WriteLine($"Du har lämnat tillbaka {books[index]}.");
-                        }
-                        else
-                            Console.WriteLine("Tyvärr felaktig inlämmning");
-                    }
-                    Console.WriteLine("Klicka på Enter för att gå tillbaka till menyn");
-                    Console.ReadLine();
-                    goto menu;
-
-                case "4":
-
-                    Console.WriteLine("Klicka på Enter för att gå tillbaka till menyn");
-                    Console.ReadLine();
-                    goto menu;
-
-                case "5":
-
-                    Console.WriteLine("Du har loggat ut!");
-                    Console.ReadLine();
-                    goto start;
-
-                default:
-                    Console.WriteLine("Ogiltligt val. Vänligen försök igen.");
-                    Console.WriteLine("");
-                    goto menu;
-
             }
         }
-
+        //Loop that checks how many books are left to borrow.
         static void availableBooks()
         {
             for (int i = 0; i < books.Length; i++)
@@ -182,8 +236,5 @@
                 Console.WriteLine($"{i + 1}. {books[i]} - {amountBooks[i]} finns kvar.");
             }
         }
-
     }
-
-
 }
