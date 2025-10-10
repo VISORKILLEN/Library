@@ -33,8 +33,7 @@
 
                 Console.Clear();
                 Console.WriteLine("Välkommen till bibloteket hemsida.");
-                Console.WriteLine("");
-                Console.WriteLine("Vänligen skriv in användarnamn för att börja logga in.");
+                Console.WriteLine("\nVänligen skriv in användarnamn för att börja logga in.");
 
                 //A loop so the user can try to log in with pin-code and username
                 while (attempts > 0)
@@ -98,7 +97,6 @@
                     Console.WriteLine("4. Mina lån");
                     Console.WriteLine("5. Logga ut");
                     string menuChoice = Console.ReadLine();
-                    Console.WriteLine("");
 
                     //Made cases for every menu choice
                     switch (menuChoice)
@@ -106,18 +104,18 @@
                         case "1":
 
                             //takes the "availableBooks and applies here
-                            Console.WriteLine("Tillgängliga böcker att låna:");
+                            Console.WriteLine("\nTillgängliga böcker att låna:");
                             availableBooks();
 
                             //Tells the user to press "Enter to go back to menu.
-                            Console.WriteLine("Klicka på Enter för att gå tillbaka till menyn");
+                            Console.WriteLine("\nKlicka på Enter för att gå tillbaka till menyn");
                             Console.ReadLine();
                             break;
 
                         case "2":
 
                             //Takes the "availableBooks and see what books are available
-                            Console.WriteLine("Vilken bok skulle du vilja låna? Skriv numret:");
+                            Console.WriteLine("\nVilken bok skulle du vilja låna? Skriv numret:");
                             availableBooks();
 
                             //tries to see what number input the user puts in
@@ -149,7 +147,7 @@
                             break;
 
                         case "3":
-                            Console.WriteLine("Vilken bok skulle du vilja lämna tillbaka? Skriv en siffra");
+                            Console.WriteLine("\nVilken bok skulle du vilja lämna tillbaka? Skriv en siffra");
 
                             //A loop to see what books are borrowed by that user.
                             for (int i = 0; i < books.Length; i++)
@@ -177,7 +175,7 @@
                                     Console.WriteLine($"Du har lämnat tillbaka {books[index]}.");
                                 }
 
-                                //Error message
+                                //Error message if u try to input something that is not there.
                                 else
                                 {
                                     Console.WriteLine("Tyvärr felaktig inlämmning");
@@ -196,7 +194,7 @@
                             {
                                 if (booksLoaned[userLogin][i] > 0)
                                 {
-                                    Console.WriteLine($"Dina lånade böcker är {books[i]} - {booksLoaned[userLogin][i]} exemplar.");
+                                    Console.WriteLine($"\nDina lånade böcker är {books[i]} - {booksLoaned[userLogin][i]} exemplar.");
                                     hasLoaned = true;
                                 }
                             }
@@ -213,17 +211,15 @@
                         case "5":
 
                             //Goes back to start and logs out user
-                            Console.WriteLine("Du har loggat ut!");
+                            Console.WriteLine("\nDu har loggat ut!");
                             Console.ReadLine();
                             loggedIn = false;
                             break;
 
                         //If the choose anything outside of the menu choices
                         default:
-                            Console.WriteLine("Ogiltligt val. Vänligen försök igen.");
-                            Console.WriteLine("");
+                            Console.WriteLine("\nOgiltligt val. Vänligen försök igen.");
                             break;
-
                     }
                 }
             }
