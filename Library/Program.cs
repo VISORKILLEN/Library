@@ -147,7 +147,23 @@
                             break;
 
                         case "3":
-                            Console.WriteLine("\nVilken bok skulle du vilja lämna tillbaka? Skriv en siffra");
+                            bool hasBook = false;
+
+                            //Loop to se what books the user has borrowed
+                            for (int i = 0; i < books.Length; i++)
+                            {
+                                if (booksLoaned[userLogin][i] > 0)
+                                {
+                                    Console.WriteLine("\nVilken bok skulle du vilja lämna tillbaka? Skriv en siffra");
+                                    hasBook = true;
+                                }
+                            }
+
+                            //Error code if the user hasen't loaned anything
+                            if (!hasBook)
+                            {
+                                Console.WriteLine("Du lånar ingen bok just nu.");
+                            }
 
                             //A loop to see what books are borrowed by that user.
                             for (int i = 0; i < books.Length; i++)
@@ -199,7 +215,7 @@
                                 }
                             }
 
-                            //Error code if the user hasen't loaned anything
+                            //Error code if the user hasen't loaned anything.
                             if (!hasLoaned)
                             {
                                 Console.WriteLine("Du lånar ingen bok just nu.");
