@@ -38,8 +38,6 @@
                 //A loop so the user can try to log in with pin-code and username
                 while (attempts > 0)
                 {
-                    //Console.WriteLine("");
-                    //Console.WriteLine("Vänligen skriv in användarnamn för att logga in.");
                     string username = Console.ReadLine();
                     Console.WriteLine("Skriv in din PIN-Kod.");
                     bool validPin = int.TryParse(Console.ReadLine(), out int userPassword);
